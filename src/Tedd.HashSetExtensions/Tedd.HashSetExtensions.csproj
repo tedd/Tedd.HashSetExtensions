@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Tedd Hansen</Authors>
-    <Description>Implementation of ToHashSet ToHashSetSafe (ignore dups), similar to ToDictionary.</Description>
+    <Description>Implementation of ToHashSet, similar to ToDictionary.</Description>
     <Copyright>Tedd Hansen</Copyright>
     <PackageReleaseNotes>Iniital release, full unit test coverage.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
-    <PackageTags>ToHashSet ToHashSetSafe</PackageTags>
+    <PackageTags>ToHashSet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
