@@ -27,3 +27,18 @@ var hashSet = list.ToHashSet(s => s, StringComparer.InvariantCultureIgnoreCase);
 var thisIsTrue = hashSet.Contains("a");
 var thisIsAlsoTrue = hashSet.Contains("A");
 ```
+
+### Contains(list)
+```cs
+var list = new List<string>();
+list.Add("A");
+list.Add("B");
+list.Add("C");
+var hashSet = list.ToHashSet(s => s);
+
+var otherList = new List<string>();
+otherList.Add("A");
+otherList.Add("B");
+
+var thisIsTrue = hashSet.Contains(otherList);
+```

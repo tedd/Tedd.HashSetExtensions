@@ -3,14 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.1;netcoreapp2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
     <Authors>Tedd Hansen</Authors>
-    <Description>Implementation of ToHashSet, similar to ToDictionary.</Description>
+    <Description>Implementation of ToHashSet() and Contains(list)</Description>
     <Copyright>Tedd Hansen</Copyright>
-    <PackageReleaseNotes>Iniital release, full unit test coverage.</PackageReleaseNotes>
+    <PackageReleaseNotes>Contains for array, list and ienumerable</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
-    <PackageTags>ToHashSet</PackageTags>
+    <PackageTags>ToHashSet Contains</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
