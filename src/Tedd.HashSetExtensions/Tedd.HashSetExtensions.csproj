@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Tedd Hansen</Authors>
+    <Description>Implementation of ToHashSet ToHashSetSafe (ignore dups), similar to ToDictionary.</Description>
+    <Copyright>Tedd Hansen</Copyright>
+    <PackageReleaseNotes>Iniital release, full unit test coverage.</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
+    <PackageTags>ToHashSet ToHashSetSafe</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
