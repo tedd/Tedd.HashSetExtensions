@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net461;netstandard2.1;netcoreapp2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
     <Authors>Tedd Hansen</Authors>
     <Description>Implementation of ToHashSet, similar to ToDictionary.</Description>
     <Copyright>Tedd Hansen</Copyright>
@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
     <PackageTags>ToHashSet</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
