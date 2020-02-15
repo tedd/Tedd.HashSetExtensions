@@ -13,13 +13,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-  workingDirectory: src/
+#- script: dotnet build --configuration $(buildConfiguration)
+#  displayName: 'dotnet build $(buildConfiguration)'
+#  workingDirectory: src/
   
   # .NET Core
 # Build, test, package, or publish a dotnet application, or run a custom dotnet command
-- task: DotNetCoreCLI@2
+- task: DotNetCoreCLI@3
   inputs:
     #command: 'build' # Options: build, push, pack, publish, restore, run, test, custom
     #publishWebProjects: true # Required when command == Publish
