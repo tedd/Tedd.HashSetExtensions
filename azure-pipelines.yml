@@ -19,20 +19,20 @@ steps:
   
   # .NET Core
 # Build, test, package, or publish a dotnet application, or run a custom dotnet command
-- task: DotNetCoreCLI@3
+- task: DotNetCoreCLI@2
   inputs:
-    #command: 'build' # Options: build, push, pack, publish, restore, run, test, custom
+    command: 'build' # Options: build, push, pack, publish, restore, run, test, custom
     #publishWebProjects: true # Required when command == Publish
     #projects: # Optional
     #custom: # Required when command == Custom
     #arguments: # Optional
-    #publishTestResults: true # Optional
+    publishTestResults: true # Optional
     #testRunTitle: # Optional
     #zipAfterPublish: true # Optional
     #modifyOutputPath: true # Optional
-    #feedsToUse: 'select' # Options: select, config
+    feedsToUse: 'select' # Options: select, config
     #vstsFeed: # Required when feedsToUse == Select
-    #includeNuGetOrg: true # Required when feedsToUse == Select
+    includeNuGetOrg: true # Required when feedsToUse == Select
     #nugetConfigPath: # Required when feedsToUse == Config
     #externalFeedCredentials: # Optional
     #noCache: false
