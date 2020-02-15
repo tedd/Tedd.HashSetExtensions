@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.1;netcoreapp2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net461;net462;net47;net471;net472;net48;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;etstandard2.1;netcoreapp2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
     <Authors>Tedd Hansen</Authors>
     <Description>list.ToHashSet(), ContainsRange(list), AddRange(list), RemoveRange(list) with and without selector.
 Fast and well tested; Special handling for arrays/lists to ensure efficiency.</Description>
