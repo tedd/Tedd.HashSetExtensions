@@ -23,8 +23,7 @@ steps:
       publishTestResults: true # Optional
       feedsToUse: 'select' # Options: select, config
       includeNuGetOrg: true # Required when feedsToUse == Select
-      restoreDirectory:
-      workingDirectory: src/
+      workingDirectory: src
   
   # .NET Core
   # Build, test, package, or publish a dotnet application, or run a custom dotnet command
@@ -45,7 +44,7 @@ steps:
       #nugetConfigPath: # Required when feedsToUse == Config
       #externalFeedCredentials: # Optional
       #noCache: false
-      restoreDirectory:
+      #restoreDirectory:
       #verbosityRestore: 'Detailed' # Options: -, quiet, minimal, normal, detailed, diagnostic
       #packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg' # Required when command == Push
       #nuGetFeedType: 'internal' # Required when command == Push# Options: internal, external
@@ -64,7 +63,7 @@ steps:
       #patchVersion: '0' # Required when versioningScheme == ByPrereleaseNumber
       #buildProperties: # Optional
       #verbosityPack: 'Detailed' # Options: -, quiet, minimal, normal, detailed, diagnostic
-      workingDirectory: src/
+      workingDirectory: src
 
   - task: DotNetCoreCLI@2
     inputs:
@@ -72,5 +71,4 @@ steps:
       publishTestResults: true # Optional
       feedsToUse: 'select' # Options: select, config
       includeNuGetOrg: true # Required when feedsToUse == Select
-      restoreDirectory:
-      workingDirectory: src/
+      workingDirectory: src
