@@ -4,7 +4,7 @@ using System.Linq;
 using Tedd.RandomUtils;
 using Xunit;
 
-namespace Tedd.HashSetUtils.Tests
+namespace Tedd.HashSetExtensions.Tests
 {
     public class ToHashSetTest
     {
@@ -72,6 +72,7 @@ namespace Tedd.HashSetUtils.Tests
             }
         }
 
+        #region Selector
         #region List
         [Fact]
         public void ListToHashSetKey()
@@ -131,6 +132,67 @@ namespace Tedd.HashSetUtils.Tests
 
 
         #endregion
+        #endregion
+        #region No selector
+        #region List
+        [Fact]
+        public void ListToHashSet()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s=>s.Key).ToList()).ToHashSet();
+            VerifyListsKey(singleList, dic);
+        }
 
+        [Fact]
+        public void ListToHashSetComparer()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s => s.Key.ToLowerInvariant()).ToList()).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+        }
+
+
+        #endregion
+        #region Array
+        [Fact]
+        public void ArrayToHashSet()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s => s.Key).ToArray()).ToHashSet();
+            VerifyListsKey(singleList, dic);
+        }
+
+
+        [Fact]
+        public void ArrayToHashSetComparer()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s => s.Key.ToLowerInvariant()).ToArray()).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+        }
+
+
+        #endregion
+        #region IEnumerable (HashSet)
+        [Fact]
+        public void IEnumerableToHashSet()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s => s.Key)).ToHashSet();
+            VerifyListsKey(singleList, dic);
+        }
+
+
+        [Fact]
+        public void IEnumerableToHashSetComparer()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = (dupList.Select(s => s.Key.ToLowerInvariant())).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+        }
+
+
+        #endregion
+        #endregion
     }
 }

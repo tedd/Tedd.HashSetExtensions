@@ -6,6 +6,40 @@ namespace Tedd
     public static class ToHashSetExtensions
     {
         #region Public
+
+        #region No selector
+
+        public static HashSet<TKey> ToHashSet<TKey>(this IEnumerable<TKey> source) =>
+            ToHashSet(source, (IEqualityComparer<TKey>)null);
+
+        public static HashSet<TKey> ToHashSet<TKey>(this IEnumerable<TKey> source, IEqualityComparer<TKey> comparer)
+        {
+            if (source == null)
+                throw new ArgumentException(nameof(source));
+
+            var d = new HashSet<TKey>(comparer);
+
+            if (source is ICollection<TKey> collection)
+            {
+                if (collection.Count == 0)
+                    return d;
+
+                if (collection is TKey[] array)
+                    for (var i = 0; i < array.Length; i++)
+                        d.Add(array[i]);
+
+                if (collection is List<TKey> list)
+                    for (var i = 0; i < list.Count; i++)
+                        d.Add(list[i]);
+            }
+
+            foreach (var element in source)
+                d.Add(element);
+
+            return d;
+        }
+        #endregion
+
         #region KeySelector
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) =>
             ToHashSet(source, keySelector, null);

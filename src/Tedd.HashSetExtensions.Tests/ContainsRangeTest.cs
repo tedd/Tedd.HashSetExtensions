@@ -4,14 +4,36 @@ using System.Linq;
 using Tedd.RandomUtils;
 using Xunit;
 
-namespace Tedd.HashSetUtils.Tests
+namespace Tedd.HashSetExtensions.Tests
 {
-    public class ContainsTest
+    public class ContainsRangeTest
     {
         private const int ListSize = 1000;
         private const string Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private FastRandom _rnd = new FastRandom();
 
+        [Fact]
+        public void SanityTests()
+        {
+
+            List<string> list = null;
+            list = new List<string>();
+            var h = list.ToHashSet();
+            h.AddRange(list);
+            h.RemoveRange(list);
+            Assert.Throws<ArgumentException>(() => { h.ContainsRange((IList<string>)null); });
+            Assert.False(h.ContainsRange(list));
+
+            list.Add("nope");
+            list.Add("nope");
+            list.Add("nope");
+            Assert.False(h.ContainsRange(list.ToList()));
+            Assert.False(h.ContainsRange(list.ToArray()));
+            Assert.False(h.ContainsRange(list.Select(s => s)));
+
+        }
+
+        #region Helper methods
         private struct KV<TKey, TValue>
         {
             public TKey Key;
@@ -71,14 +93,16 @@ namespace Tedd.HashSetUtils.Tests
                 Assert.True(dic.TryGetValue(kv.Key, out var val));
             }
         }
+        #endregion
 
+    #region No selector
         #region List
         [Fact]
         public void ListToHashSetKey()
         {
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToHashSet(k => k.Key);
-            Assert.True(dic.Contains(dupList.Select(k=>k.Key).ToList()));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key).ToList()));
         }
 
         [Fact]
@@ -87,7 +111,7 @@ namespace Tedd.HashSetUtils.Tests
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
             VerifyListsKey(singleList, dic);
-            Assert.True(dic.Contains(dupList.Select(k => k.Key.ToUpperInvariant()).ToList()));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key.ToUpperInvariant()).ToList()));
         }
 
 
@@ -99,7 +123,7 @@ namespace Tedd.HashSetUtils.Tests
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToArray().ToHashSet(k => k.Key);
             VerifyListsKey(singleList, dic);
-            Assert.True(dic.Contains(dupList.Select(k => k.Key).ToArray()));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key).ToArray()));
         }
 
 
@@ -109,7 +133,7 @@ namespace Tedd.HashSetUtils.Tests
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToArray().ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
             VerifyListsKey(singleList, dic);
-            Assert.True(dic.Contains(dupList.Select(k => k.Key.ToUpperInvariant()).ToArray()));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key.ToUpperInvariant()).ToArray()));
 
         }
 
@@ -122,7 +146,7 @@ namespace Tedd.HashSetUtils.Tests
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToHashSet().ToHashSet(k => k.Key);
             VerifyListsKey(singleList, dic);
-            Assert.True(dic.Contains(dupList.Select(k => k.Key)));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key)));
         }
 
 
@@ -132,10 +156,78 @@ namespace Tedd.HashSetUtils.Tests
             SetUpLists(out var singleList, out var dupList);
             var dic = dupList.ToHashSet().ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
             VerifyListsKey(singleList, dic);
-            Assert.True(dic.Contains(dupList.Select(k => k.Key.ToUpperInvariant())));
+            Assert.True(dic.ContainsRange(dupList.Select(k => k.Key.ToUpperInvariant())));
         }
 
 
+        #endregion
+        #endregion
+
+        #region Selector
+
+        #region List
+        [Fact]
+        public void ListToHashSetKeySelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key);
+            Assert.True(dic.ContainsRange(dupList.ToList(), k => k.Key));
+        }
+
+        [Fact]
+        public void ListToHashSetKeyComparerSelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+            Assert.True(dic.ContainsRange(dupList.ToList(), k => k.Key.ToUpperInvariant()));
+        }
+
+
+        #endregion
+        #region Array
+        [Fact]
+        public void ArrayToHashSetKeySelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key);
+            Assert.True(dic.ContainsRange(dupList.ToArray(), k => k.Key));
+        }
+
+
+        [Fact]
+        public void ArrayToHashSetKeyComparerSelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+            Assert.True(dic.ContainsRange(dupList.ToArray(), k => k.Key.ToUpperInvariant()));
+
+        }
+
+
+        #endregion
+        #region IEnumerable (HashSet)
+        [Fact]
+        public void IEnumerableToHashSetKeySelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key);
+            Assert.True(dic.ContainsRange(dupList.Select(s => s), k => k.Key));
+        }
+
+
+        [Fact]
+        public void IEnumerableToHashSetKeyComparerSelector()
+        {
+            SetUpLists(out var singleList, out var dupList);
+            var dic = dupList.ToHashSet(k => k.Key.ToLowerInvariant(), StringComparer.OrdinalIgnoreCase);
+            VerifyListsKey(singleList, dic);
+            Assert.True(dic.ContainsRange(dupList.Select(s => s), k => k.Key.ToUpperInvariant()));
+        }
+
+
+        #endregion
         #endregion
 
     }
