@@ -1,22 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net462;net47;net471;net472;net48;netstandard1.2;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;etstandard2.1;netcoreapp2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
-    <Authors>Tedd Hansen</Authors>
-    <Description>list.ToHashSet(), ContainsRange(list), AddRange(list), RemoveRange(list) with and without selector.
-Fast and well tested; Special handling for arrays/lists to ensure efficiency.</Description>
+    <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net8.0;net10.0</TargetFrameworks>
+    <Authors>tedd</Authors>
+    <Company>Tedd Hansen</Company>
+    <Description>list.ToHashSet(), ContainsRange(), AddRange(), RemoveRange() extensions. Fast and well tested; Special handling for arrays/lists to ensure efficiency.</Description>
     <Copyright>Tedd Hansen</Copyright>
-    <PackageReleaseNotes>Contains for array, list and ienumerable</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
-    <PackageTags>ToHashSet ContainsRange AddRange RemoveRange</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>HashSet;ToHashSet;ContainsRange;AddRange;RemoveRange;Extensions;Performance</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.0.1</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-all</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE">
+    <None Include="../../LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
