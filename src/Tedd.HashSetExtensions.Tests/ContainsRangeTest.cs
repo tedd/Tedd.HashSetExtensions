@@ -21,7 +21,7 @@ namespace Tedd.HashSetExtensions.Tests
             var h = list.ToHashSet();
             h.AddRange(list);
             h.RemoveRange(list);
-            Assert.Throws<ArgumentNullException>(() => { h.ContainsRange((IList<string>)null); });
+            Assert.Throws<ArgumentException>(() => { h.ContainsRange((IList<string>)null); });
             Assert.False(h.ContainsRange(list));
 
             list.Add("nope");
@@ -52,11 +52,6 @@ namespace Tedd.HashSetExtensions.Tests
                     return false;
                 var o = ob.Value;
                 return Key.Equals(o.Key) && Value.Equals(o.Value);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Key, Value);
             }
 
             #endregion
@@ -100,7 +95,7 @@ namespace Tedd.HashSetExtensions.Tests
         }
         #endregion
 
-        #region No selector
+    #region No selector
         #region List
         [Fact]
         public void ListToHashSetKey()

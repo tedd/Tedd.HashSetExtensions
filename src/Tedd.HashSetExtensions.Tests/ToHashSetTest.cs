@@ -32,11 +32,6 @@ namespace Tedd.HashSetExtensions.Tests
                 return Key.Equals(o.Key) && Value.Equals(o.Value);
             }
 
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(Key, Value);
-            }
-
             #endregion
         }
 
@@ -144,7 +139,7 @@ namespace Tedd.HashSetExtensions.Tests
         public void ListToHashSet()
         {
             SetUpLists(out var singleList, out var dupList);
-            var dic = (dupList.Select(s => s.Key).ToList()).ToHashSet();
+            var dic = (dupList.Select(s=>s.Key).ToList()).ToHashSet();
             VerifyListsKey(singleList, dic);
         }
 
