@@ -80,7 +80,7 @@ namespace Tedd.HashSetExtensions.Tests
             h.RemoveRange(list);
             Assert.Throws<ArgumentException>(() => { h.AddRange(null); });
             Assert.Throws<ArgumentException>(() => { h.RemoveRange(null); });
-            
+
         }
 
         #region No selector
