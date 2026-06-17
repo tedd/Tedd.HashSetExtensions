@@ -1,3 +1,4 @@
+cat << 'INNER_EOF' > src/Tedd.HashSetExtensions/AddRemoveRangeExtensions.cs
 using System;
 using System.Collections.Generic;
 #if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
@@ -8,14 +9,12 @@ namespace Tedd
 {
     public static class AddRemoveRangeExtensions
     {
-        #region AddRange
-        #region No selector
         public static int AddRange<TKey>(this HashSet<TKey> hashSet, IEnumerable<TKey> values)
         {
-            var count = 0;
-
             if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
             if (values == null) throw new ArgumentNullException(nameof(values));
+
+            var count = 0;
 
             if (values is ICollection<TKey> collection)
             {
@@ -62,16 +61,14 @@ namespace Tedd
                     count++;
             return count;
         }
-        #endregion
 
-        #region Selector
         public static int AddRange<TSource, TKey>(this HashSet<TKey> hashSet, IEnumerable<TSource> values, Func<TSource, TKey> keySelector)
         {
-            var count = 0;
-
             if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
             if (values == null) throw new ArgumentNullException(nameof(values));
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+
+            var count = 0;
 
             if (values is ICollection<TSource> collection)
             {
@@ -118,17 +115,13 @@ namespace Tedd
                     count++;
             return count;
         }
-        #endregion
-        #endregion
 
-        #region RemoveRange
-        #region No selector
         public static int RemoveRange<TKey>(this HashSet<TKey> hashSet, IEnumerable<TKey> values)
         {
-            var count = 0;
-
             if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
             if (values == null) throw new ArgumentNullException(nameof(values));
+
+            var count = 0;
 
             if (values is ICollection<TKey> collection)
             {
@@ -172,16 +165,14 @@ namespace Tedd
                     count++;
             return count;
         }
-        #endregion
 
-        #region Selector
         public static int RemoveRange<TSource, TKey>(this HashSet<TKey> hashSet, IEnumerable<TSource> values, Func<TSource, TKey> keySelector)
         {
-            var count = 0;
-
             if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
             if (values == null) throw new ArgumentNullException(nameof(values));
             if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+
+            var count = 0;
 
             if (values is ICollection<TSource> collection)
             {
@@ -225,8 +216,8 @@ namespace Tedd
                     count++;
             return count;
         }
-        #endregion
-        #endregion
-
     }
 }
+INNER_EOF
+
+dotnet run -c Release --project src/Tedd.HashSetExtensions.Benchmarks/Tedd.HashSetExtensions.Benchmarks.csproj

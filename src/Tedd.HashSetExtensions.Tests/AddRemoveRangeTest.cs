@@ -34,6 +34,11 @@ namespace Tedd.HashSetExtensions.Tests
                 return Key.Equals(o.Key) && Value.Equals(o.Value);
             }
 
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Key, Value);
+            }
+
             #endregion
         }
 
@@ -72,15 +77,15 @@ namespace Tedd.HashSetExtensions.Tests
         public void SanityTests()
         {
 
-            List<string> list = null;
-            Assert.Throws<ArgumentException>(() => { list.ToHashSet(); });
+            List<string>? list = null;
+            Assert.Throws<ArgumentNullException>(() => { list.ToHashSet(); });
             list = new List<string>();
             var h = list.ToHashSet();
             h.AddRange(list);
             h.RemoveRange(list);
-            Assert.Throws<ArgumentException>(() => { h.AddRange(null); });
-            Assert.Throws<ArgumentException>(() => { h.RemoveRange(null); });
-            
+            Assert.Throws<ArgumentNullException>(() => { h.AddRange(null); });
+            Assert.Throws<ArgumentNullException>(() => { h.RemoveRange(null); });
+
         }
 
         #region No selector
