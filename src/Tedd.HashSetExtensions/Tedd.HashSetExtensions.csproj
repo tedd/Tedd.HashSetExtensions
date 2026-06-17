@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net8.0;net10.0</TargetFrameworks>
     <Authors>tedd</Authors>
     <Company>Tedd Hansen</Company>
     <Description>list.ToHashSet(), ContainsRange(), AddRange(), RemoveRange() extensions. Fast and well tested; Special handling for arrays/lists to ensure efficiency.</Description>
