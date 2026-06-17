@@ -1,17 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-using System.Runtime.InteropServices;
-#endif
 
-namespace Tedd
+namespace Tedd.Archive
 {
     public static class ContainsRangeExtensions
     {
         public static bool ContainsRange<TKey>(this HashSet<TKey> hashSet, IEnumerable<TKey> values)
         {
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TKey> collection)
             {
@@ -20,31 +17,17 @@ namespace Tedd
 
                 if (collection is TKey[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Contains(item))
-                            return true;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Contains(array[i]))
                             return true;
-#endif
                     return false;
                 }
 
                 if (collection is List<TKey> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Contains(item))
-                            return true;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(list[i]))
                             return true;
-#endif
                     return false;
                 }
             }
@@ -58,9 +41,8 @@ namespace Tedd
 
         public static bool ContainsRange<TSource, TKey>(this HashSet<TKey> hashSet, IEnumerable<TSource> values, Func<TSource, TKey> keySelector)
         {
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TSource> collection)
             {
@@ -69,31 +51,17 @@ namespace Tedd
 
                 if (collection is TSource[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Contains(keySelector(item)))
-                            return true;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Contains(keySelector(array[i])))
                             return true;
-#endif
                     return false;
                 }
 
                 if (collection is List<TSource> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Contains(keySelector(item)))
-                            return true;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(keySelector(list[i])))
                             return true;
-#endif
                     return false;
                 }
             }
@@ -104,5 +72,6 @@ namespace Tedd
 
             return false;
         }
+
     }
 }

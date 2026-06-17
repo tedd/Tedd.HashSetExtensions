@@ -1,10 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-using System.Runtime.InteropServices;
-#endif
 
-namespace Tedd
+namespace Tedd.Archive
 {
     public static class AddRemoveRangeExtensions
     {
@@ -14,45 +11,27 @@ namespace Tedd
         {
             var count = 0;
 
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TKey> collection)
             {
                 if (collection.Count == 0)
                     return 0;
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || NET8_0_OR_GREATER || NET10_0_OR_GREATER
-                hashSet.EnsureCapacity(hashSet.Count + collection.Count);
-#endif
-
                 if (collection is TKey[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Add(item))
-                            count++;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Add(array[i]))
                             count++;
-#endif
                     return count;
                 }
 
                 if (collection is List<TKey> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Add(item))
-                            count++;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(list[i]))
                             count++;
-#endif
                     return count;
                 }
             }
@@ -69,46 +48,27 @@ namespace Tedd
         {
             var count = 0;
 
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TSource> collection)
             {
                 if (collection.Count == 0)
                     return 0;
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || NET8_0_OR_GREATER || NET10_0_OR_GREATER
-                hashSet.EnsureCapacity(hashSet.Count + collection.Count);
-#endif
-
                 if (collection is TSource[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Add(keySelector(item)))
-                            count++;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Add(keySelector(array[i])))
                             count++;
-#endif
                     return count;
                 }
 
                 if (collection is List<TSource> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Add(keySelector(item)))
-                            count++;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(keySelector(list[i])))
                             count++;
-#endif
                     return count;
                 }
             }
@@ -127,8 +87,8 @@ namespace Tedd
         {
             var count = 0;
 
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TKey> collection)
             {
@@ -137,31 +97,17 @@ namespace Tedd
 
                 if (collection is TKey[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Remove(item))
-                            count++;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Remove(array[i]))
                             count++;
-#endif
                     return count;
                 }
 
                 if (collection is List<TKey> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Remove(item))
-                            count++;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(list[i]))
                             count++;
-#endif
                     return count;
                 }
 
@@ -179,9 +125,8 @@ namespace Tedd
         {
             var count = 0;
 
-            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
-            if (values == null) throw new ArgumentNullException(nameof(values));
-            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (values == null)
+                throw new ArgumentException(nameof(values));
 
             if (values is ICollection<TSource> collection)
             {
@@ -190,31 +135,17 @@ namespace Tedd
 
                 if (collection is TSource[] array)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = array.AsSpan();
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Remove(keySelector(item)))
-                            count++;
-#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Remove(keySelector(array[i])))
                             count++;
-#endif
                     return count;
                 }
 
                 if (collection is List<TSource> list)
                 {
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-                    var span = CollectionsMarshal.AsSpan(list);
-                    foreach (ref readonly var item in span)
-                        if (hashSet.Remove(keySelector(item)))
-                            count++;
-#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(keySelector(list[i])))
                             count++;
-#endif
                     return count;
                 }
 
