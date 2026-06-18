@@ -2,110 +2,105 @@
 .Net extension methods for ToHashSet&lt;T>().<br />
 All methods implemented with and without both selector and comparer. Special handling of Array and List to avoid enumeration overhead. In line with how ToDictionary is implemented in .Net source code.
 
+## Architectural Execution Flow
+
+The core epistemological mechanism behind these extensions is type-checking against `ICollection<T>` prior to enumeration. When invoked, the execution flow operates as follows:
+
+1. **Type Resolution:** The framework determines if the provided `IEnumerable<T>` implements `ICollection<T>`.
+2. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
+3. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
+
+*(Hypothetical enhancements regarding `ReadOnlySpan<T>` or vectorized SIMD execution are not currently implemented and remain under evaluation.)*
+
 # Examples
 
-All methods supports selector. A selector is used to pick or transform the object before it is added to the hash.
+All methods support a selector paradigm. A selector dictates the extraction or structural transformation of the entity prior to its integration into the hash set.
+
+> **⚠️ Structural Disambiguation (.NET 9.0/10.0+):**
+> Modern .NET SDKs inherently contain `System.Linq.Enumerable.ToHashSet<T>`. When invoking parameterless `.ToHashSet()` extensions on local variables containing `System.Linq`, the compiler encounters an ambiguous resolution (CS0121). To mitigate this structural anomaly, employ an identity selector (`s => s`) or explicitly reference the class paradigm (`Tedd.ToHashSetExtensions.ToHashSet(list)`).
 
 ## Selector example
 
 ```cs
-var dic = new Dictionary<string, int>();
-dic.Add("A", 1);
-dic.Add("B", 2);
+Dictionary<string, int> dic = new()
+{
+    ["A"] = 1,
+    ["B"] = 2
+};
 
-// A dictionary consists of KeyValuePair and we pick the Key portion of that for our HashSet
-var hashSet = dic.ToHashSet(s => s.Key);
+// A dictionary consists of KeyValuePair structures; we extract the Key component for the HashSet
+HashSet<string> hashSet = dic.ToHashSet(s => s.Key);
 
-dic.Add("CC", 2);
-// Or we can have more complex logic
-var hashSet2 = dic.ToHashSet(s => {
-	if (s.Key == "CC")
-		return "C";
-	return s.Key;
+dic["CC"] = 2;
+// Or implement localized functional transformation logic
+HashSet<string> hashSet2 = dic.ToHashSet(s => {
+    if (s.Key == "CC")
+        return "C";
+    return s.Key;
 });
-
 ```
 
 ## Methods
 
-### ienumerable.ToHashSet()
+### ienumerable.ToHashSet(selector)
 ```cs
-var list = new List<string>();
-list.Add("A");
-list.Add("B");
-var hashSet = list.ToHashSet(); // No selector needed
-var thisIsTrue = hashSet.Contains("A");
-var thisIsFalse = hashSet.Contains("C");
+List<string> list = ["A", "B"];
+// HashSet<string> hashSet = list.ToHashSet(); // Ambiguous resolution in modern .NET
+HashSet<string> hashSet = list.ToHashSet(s => s); // Functional selector ensures deterministic resolution
+bool thisIsTrue = hashSet.Contains("A");
+bool thisIsFalse = hashSet.Contains("C");
 
-// Add B again
+// Append B again
 list.Add("B");
-var hashSet2 = list.ToHashSet(s => s); // Using selector
-// HashSet only cointains 2 items because duplicates are ignored
-var thisIsTwo = hashSet2.Count;
+HashSet<string> hashSet2 = list.ToHashSet(s => s);
+// HashSet retains 2 entities; structural duplicates are discarded
+int thisIsTwo = hashSet2.Count;
 ```
 
 ### ienumerable.ToHashSet(selector, comparer)
 ```cs
-var list = new List<string>();
-list.Add("a");
-list.Add("b");
-var hashSet = list.ToHashSet(s => s, StringComparer.InvariantCultureIgnoreCase);
-// HashSet now contains: a, b
+List<string> list = ["a", "b"];
+HashSet<string> hashSet = list.ToHashSet(s => s, StringComparer.InvariantCultureIgnoreCase);
+// HashSet structure: a, b
 
-var thisIsTrue = hashSet.Contains("a");
-var thisIsAlsoTrue = hashSet.Contains("A");
+bool thisIsTrue = hashSet.Contains("a");
+bool thisIsAlsoTrue = hashSet.Contains("A");
 ```
 
 ### hashset.ContainsRange(ienumerable)
 ```cs
-var list = new List<string>();
-list.Add("A");
-list.Add("B");
-list.Add("C");
-var hashSet = list.ToHashSet(s => s);
-// HashSet now contains: A, B, C
+List<string> list = ["A", "B", "C"];
+HashSet<string> hashSet = list.ToHashSet(s => s);
+// HashSet structure: A, B, C
 
-var otherList = new List<string>();
-otherList.Add("A");
-otherList.Add("B");
+List<string> otherList = ["A", "B"];
 
-var thisIsTrue = hashSet.ContainsRange(otherList);
+bool thisIsTrue = hashSet.ContainsRange(otherList);
 ```
 
 ### hashset.AddRange(ienumerable)
 ```cs
-var list1 = new List<string>();
-list1.Add("A");
-list1.Add("B");
-var hashSet = list1.ToHashSet(s => s);
-// HashSet now contains: A, B
+List<string> list1 = ["A", "B"];
+HashSet<string> hashSet = list1.ToHashSet(s => s);
+// HashSet structure: A, B
 
-var list2 = new List<string>();
-list.Add("C");
-list.Add("D");
+List<string> list2 = ["C", "D"];
 hashSet.AddRange(list2);
-// HashSet now contains: A, B, C, D
+// HashSet structure: A, B, C, D
 
-var thisIsTrue = hashSet.Contains("D");
+bool thisIsTrue = hashSet.Contains("D");
 ```
 
 ### hashset.RemoveRange(ienumerable)
 ```cs
-var list1 = new List<string>();
-list1.Add("A");
-list1.Add("B");
-list1.Add("C");
-list1.Add("D");
-var hashSet = list1.ToHashSet();
-// HashSet now contains: A, B, C, D
+List<string> list1 = ["A", "B", "C", "D"];
+HashSet<string> hashSet = list1.ToHashSet(s => s);
+// HashSet structure: A, B, C, D
 
-var list2 = new List<string>();
-list.Add("A");
-list.Add("B");
+List<string> list2 = ["A", "B"];
 hashSet.RemoveRange(list2);
-// HashSet now contains: B, C
+// HashSet structure: C, D
 
-
-var thisIsFalse = hashSet.Contains("A");
-var thisIsAlsoFalse = hashSet.Contains("B");
+bool thisIsFalse = hashSet.Contains("A");
+bool thisIsAlsoFalse = hashSet.Contains("B");
 ```
