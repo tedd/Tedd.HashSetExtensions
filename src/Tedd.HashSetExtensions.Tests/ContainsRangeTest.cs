@@ -54,6 +54,11 @@ namespace Tedd.HashSetExtensions.Tests
                 return Key.Equals(o.Key) && Value.Equals(o.Value);
             }
 
+            public override int GetHashCode()
+            {
+                return Key == null ? 0 : Key.GetHashCode();
+            }
+
             #endregion
         }
 
@@ -95,7 +100,7 @@ namespace Tedd.HashSetExtensions.Tests
         }
         #endregion
 
-    #region No selector
+        #region No selector
         #region List
         [Fact]
         public void ListToHashSetKey()

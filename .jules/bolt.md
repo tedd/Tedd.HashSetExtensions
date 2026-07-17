@@ -7,3 +7,6 @@
 - Substituted `for` loop on arrays with `.AsSpan()` for equivalent performance.
 - Pre-allocated `HashSet<T>` internal arrays leveraging `EnsureCapacity()` for collections of known sizes, eliminating O(log N) rehashing events during `AddRange`.
 - In `ContainsRange`, optimized similarly to bypass iteration overheads.
+## 2026-07-17 - ToHashSet Capacity Pre-allocation
+**Observation:** The `ToHashSet` extensions enumerated arrays and lists manually into a default `HashSet<T>` without supplying the known capacity. This resulted in hidden internal array resizing and increased GC pressure, particularly for larger collections (e.g., benchmark showed ~0.56x CPU execution time and ~0.30x allocated memory when capacity was specified).
+**Strategic Action:** Conditionally utilized the `HashSet<T>(int capacity, IEqualityComparer<T>? comparer)` constructor when target frameworks support it (`NETSTANDARD2_1_OR_GREATER` / `NETCOREAPP`). Implemented via preprocessor directives to maintain backward compatibility for older frameworks like `net462` and `netstandard2.0`.
