@@ -17,6 +17,16 @@ steps:
 #  displayName: 'dotnet build $(buildConfiguration)'
 #  workingDirectory: src/
   
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '10.0.x'
+
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore' # Options: build, push, pack, publish, restore, run, test, custom

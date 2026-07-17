@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tedd
+namespace Tedd.Archive
 {
     public static class ToHashSetExtensions
     {
@@ -12,44 +12,27 @@ namespace Tedd
         public static HashSet<TKey> ToHashSet<TKey>(this IEnumerable<TKey> source) =>
             ToHashSet(source, (IEqualityComparer<TKey>)null);
 
-        /// <summary>
-        /// Converts an IEnumerable into a HashSet. Time complexity: O(N) where N is the number of elements. Space complexity: O(N) for the resulting set.
-        /// </summary>
         public static HashSet<TKey> ToHashSet<TKey>(this IEnumerable<TKey> source, IEqualityComparer<TKey> comparer)
         {
             if (source == null)
                 throw new ArgumentException(nameof(source));
 
+            var d = new HashSet<TKey>(comparer);
+
             if (source is ICollection<TKey> collection)
             {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                var dColl = new HashSet<TKey>(collection.Count, comparer);
-#else
-                var dColl = new HashSet<TKey>(comparer);
-#endif
                 if (collection.Count == 0)
-                    return dColl;
+                    return d;
 
                 if (collection is TKey[] array)
-                {
                     for (var i = 0; i < array.Length; i++)
-                        dColl.Add(array[i]);
-                    return dColl;
-                }
+                        d.Add(array[i]);
 
                 if (collection is List<TKey> list)
-                {
                     for (var i = 0; i < list.Count; i++)
-                        dColl.Add(list[i]);
-                    return dColl;
-                }
-
-                foreach (var element in collection)
-                    dColl.Add(element);
-                return dColl;
+                        d.Add(list[i]);
             }
 
-            var d = new HashSet<TKey>(comparer);
             foreach (var element in source)
                 d.Add(element);
 
@@ -61,9 +44,6 @@ namespace Tedd
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) =>
             ToHashSet(source, keySelector, null);
 
-        /// <summary>
-        /// Converts an IEnumerable into a HashSet. Time complexity: O(N) where N is the number of elements. Space complexity: O(N) for the resulting set.
-        /// </summary>
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
             if (source == null)
@@ -72,9 +52,11 @@ namespace Tedd
             if (keySelector == null)
                 throw new ArgumentException(nameof(keySelector));
 
+            var capacity = 0;
             if (source is ICollection<TSource> collection)
             {
-                if (collection.Count == 0)
+                capacity = collection.Count;
+                if (capacity == 0)
                     return new HashSet<TKey>(comparer);
 
                 if (collection is TSource[] array)
@@ -82,15 +64,6 @@ namespace Tedd
 
                 if (collection is List<TSource> list)
                     return ToHashSet(list, keySelector, comparer);
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-                var dColl = new HashSet<TKey>(collection.Count, comparer);
-#else
-                var dColl = new HashSet<TKey>(comparer);
-#endif
-                foreach (var element in collection)
-                    dColl.Add(keySelector(element));
-                return dColl;
             }
 
             var d = new HashSet<TKey>(comparer);
@@ -105,16 +78,9 @@ namespace Tedd
 
         #region Private
         #region Array
-        /// <summary>
-        /// Converts an array into a HashSet. Time complexity: O(N). Space complexity: O(N).
-        /// </summary>
         private static HashSet<TKey> ToHashSet<TSource, TKey>(TSource[] source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-            var d = new HashSet<TKey>(source.Length, comparer);
-#else
             var d = new HashSet<TKey>(comparer);
-#endif
             for (var i = 0; i < source.Length; i++)
                 d.Add(keySelector(source[i]));
 
@@ -123,16 +89,9 @@ namespace Tedd
         #endregion
 
         #region List
-        /// <summary>
-        /// Converts a List into a HashSet. Time complexity: O(N). Space complexity: O(N).
-        /// </summary>
         private static HashSet<TKey> ToHashSet<TSource, TKey>(List<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP || NET5_0_OR_GREATER
-            var d = new HashSet<TKey>(source.Count, comparer);
-#else
             var d = new HashSet<TKey>(comparer);
-#endif
             foreach (TSource element in source)
                 d.Add(keySelector(element));
 

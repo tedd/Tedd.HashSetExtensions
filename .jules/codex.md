@@ -6,3 +6,6 @@
 1. Revise instructional examples within `README.md` to utilize the selector syntax (e.g., `.ToHashSet(s => s)`) or explicitly address the disambiguation protocol when no selector is utilized.
 2. Upgrade structural syntax across all documentation artifacts to utilize contemporary C# collection expressions (e.g., `[]`) and target-typed `new()`.
 3. Introduce an explicit "Architectural Execution Flow" section to delineate how the extension structurally prioritizes array/list capacity allocation via index-based iteration.
+## 2026-07-17 - Optimization of ToHashSet Extension Paradigms
+**Observation:** The operational execution flow for `ToHashSet` exhibited suboptimal allocation mechanics due to the omission of predetermined capacity allocation, precipitating superfluous Garbage Collection cycles during underlying internal array restructuring.
+**Strategic Action:** Architected a conditional compilation framework utilizing `#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP` to instantiate `HashSet<T>` with precise bounds derived from `ICollection<T>.Count`, thereby mitigating allocation overhead whilst preserving structural integrity across legacy target frameworks.
