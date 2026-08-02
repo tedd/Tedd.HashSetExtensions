@@ -27,36 +27,24 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore' # Options: build, push, pack, publish, restore, run, test, custom
-      publishTestResults: true # Optional
-      feedsToUse: 'select' # Options: select, config
-      includeNuGetOrg: true # Required when feedsToUse == Select
-      workingDirectory: src
+      projects: 'src/**/*.csproj'
   
   # .NET Core
   # Build, test, package, or publish a dotnet application, or run a custom dotnet command
   - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
-      publishTestResults: true
-      feedsToUse: 'select'
-      includeNuGetOrg: true
-      workingDirectory: src
+      projects: 'src/**/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
   - task: DotNetCoreCLI@2
     inputs:
       command: 'test'
-      publishTestResults: true
-      feedsToUse: 'select'
-      includeNuGetOrg: true
-      workingDirectory: src
+      projects: 'src/**/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
 
   - task: DotNetCoreCLI@2
     inputs:
       command: 'pack'
-      publishTestResults: true
-      feedsToUse: 'select'
-      includeNuGetOrg: true
-      workingDirectory: src
+      projects: 'src/**/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
