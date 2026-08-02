@@ -7,12 +7,13 @@
     <Description>list.ToHashSet(), ContainsRange(), AddRange(), RemoveRange() extensions. Fast and well tested; Special handling for arrays/lists to ensure efficiency.</Description>
     <Copyright>Tedd Hansen</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/tedd/Tedd.HashSetExtensions</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.HashSetExtensions.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>HashSet;ToHashSet;ContainsRange;AddRange;RemoveRange;Extensions;Performance</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -22,6 +23,10 @@
 
   <ItemGroup>
     <None Include="../../LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="../../README.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
