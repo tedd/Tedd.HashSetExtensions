@@ -34,6 +34,11 @@ namespace Tedd.HashSetExtensions.Tests
                 return Key.Equals(o.Key) && Value.Equals(o.Value);
             }
 
+            public override int GetHashCode()
+            {
+                return (Key == null ? 0 : Key.GetHashCode()) ^ (Value == null ? 0 : Value.GetHashCode());
+            }
+
             #endregion
         }
 
