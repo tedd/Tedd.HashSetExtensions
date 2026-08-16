@@ -184,20 +184,20 @@ namespace Tedd.HashSetExtensions.Tests
                 var list = new List<int> { 1, 2, 3 };
                 var enumerable = Enumerable.Range(1, 3);
 
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(arr));
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(list));
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(enumerable));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(arr));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(list));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(enumerable));
 
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(arr, i => i));
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(list, i => i));
-                Assert.Equal(1, new HashSet<int>{ 1, 2 }.AddRange(enumerable, i => i));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(arr, i => i));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(list, i => i));
+                Assert.Equal(1, new HashSet<int> { 1, 2 }.AddRange(enumerable, i => i));
 
-                Assert.Equal(2, new HashSet<int>{ 1, 2 }.RemoveRange(arr));
-                Assert.Equal(2, new HashSet<int>{ 1, 2 }.RemoveRange(list));
-                Assert.Equal(2, new HashSet<int>{ 1, 2 }.RemoveRange(enumerable));
+                Assert.Equal(2, new HashSet<int> { 1, 2 }.RemoveRange(arr));
+                Assert.Equal(2, new HashSet<int> { 1, 2 }.RemoveRange(list));
+                Assert.Equal(2, new HashSet<int> { 1, 2 }.RemoveRange(enumerable));
 
-                Assert.Equal(2, new HashSet<int>{ 1, 2 }.RemoveRange(arr, i => i));
-                Assert.Equal(2, new HashSet<int>{ 1, 2 }.RemoveRange(list, i => i));
+                Assert.Equal(2, new HashSet<int> { 1, 2 }.RemoveRange(arr, i => i));
+                Assert.Equal(2, new HashSet<int> { 1, 2 }.RemoveRange(list, i => i));
             }
             finally
             {
@@ -242,7 +242,7 @@ namespace Tedd.HashSetExtensions.Tests
                 var arr = array.AsSpan(0, 3).ToArray();
 
                 var result1 = arr.ToHashSet(i => i, null);
-                var result2 = new List<int>{ 1, 2, 3 }.ToHashSet(i => i, null);
+                var result2 = new List<int> { 1, 2, 3 }.ToHashSet(i => i, null);
                 Assert.Equal(3, result1.Count);
                 Assert.Equal(3, result2.Count);
             }
