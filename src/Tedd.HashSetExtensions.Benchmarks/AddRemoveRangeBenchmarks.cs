@@ -8,10 +8,10 @@ using Tedd.Archive;
 [MemoryDiagnoser]
 public class AddRemoveRangeBenchmarks
 {
-    private HashSet<int>? _hashSetArchive;
-    private HashSet<int>? _hashSetOptimized;
-    private List<int>? _list;
-    private int[]? _array;
+    private HashSet<int> _hashSetArchive = null!;
+    private HashSet<int> _hashSetOptimized = null!;
+    private List<int> _list = null!;
+    private int[] _array = null!;
 
     [Params(100, 10000)]
     public int Size { get; set; }
