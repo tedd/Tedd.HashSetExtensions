@@ -9,3 +9,8 @@
 **Observation:** The previous optimization was verified to be correct and reduced allocations, but there were minor issues: GetHashCode() implementation in test models threw NotImplementedException crashing tests, and only one benchmark was wired up in the Program runner.
 
 **Strategic Action:** Implemented proper GetHashCode implementation via `HashCode.Combine(Key, Value)` for test objects to prevent crashing HashSet initialization during tests. Updated the Benchmark Runner to use `BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args)` so all benchmark classes in the assembly can be run.
+## 2024-08-17 - Azure pipelines Nuget fix
+
+**Observation:** The Azure pipeline build was failing on restore because the CI runners did not have a nuget tool installer setup step, causing `dotnet restore` under `DotNetCoreCLI@2` task to fail due to missing nuget executables.
+
+**Strategic Action:** Explicitly added the `NuGetToolInstaller@1` task before the build/restore commands in the `azure-pipelines.yml`.
