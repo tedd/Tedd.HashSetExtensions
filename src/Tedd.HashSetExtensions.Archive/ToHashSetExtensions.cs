@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tedd
+namespace Tedd.Archive
 {
     public static class ToHashSetExtensions
     {
@@ -17,50 +17,26 @@ namespace Tedd
             if (source == null)
                 throw new ArgumentException(nameof(source));
 
+            var d = new HashSet<TKey>(comparer);
+
             if (source is ICollection<TKey> collection)
             {
                 if (collection.Count == 0)
-                    return new HashSet<TKey>(comparer);
+                    return d;
 
                 if (collection is TKey[] array)
-                {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                    var d = new HashSet<TKey>(array.Length, comparer);
-#else
-                    var d = new HashSet<TKey>(comparer);
-#endif
                     for (var i = 0; i < array.Length; i++)
                         d.Add(array[i]);
-                    return d;
-                }
 
                 if (collection is List<TKey> list)
-                {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                    var d = new HashSet<TKey>(list.Count, comparer);
-#else
-                    var d = new HashSet<TKey>(comparer);
-#endif
                     for (var i = 0; i < list.Count; i++)
                         d.Add(list[i]);
-                    return d;
-                }
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                var collectionSet = new HashSet<TKey>(collection.Count, comparer);
-#else
-                var collectionSet = new HashSet<TKey>(comparer);
-#endif
-                foreach (var element in collection)
-                    collectionSet.Add(element);
-                return collectionSet;
             }
 
-            var defaultSet = new HashSet<TKey>(comparer);
             foreach (var element in source)
-                defaultSet.Add(element);
+                d.Add(element);
 
-            return defaultSet;
+            return d;
         }
         #endregion
 
@@ -76,9 +52,10 @@ namespace Tedd
             if (keySelector == null)
                 throw new ArgumentException(nameof(keySelector));
 
+            var capacity = 0;
             if (source is ICollection<TSource> collection)
             {
-                var capacity = collection.Count;
+                capacity = collection.Count;
                 if (capacity == 0)
                     return new HashSet<TKey>(comparer);
 
@@ -87,15 +64,6 @@ namespace Tedd
 
                 if (collection is List<TSource> list)
                     return ToHashSet(list, keySelector, comparer);
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                var collectionSet = new HashSet<TKey>(capacity, comparer);
-#else
-                var collectionSet = new HashSet<TKey>(comparer);
-#endif
-                foreach (var element in collection)
-                    collectionSet.Add(keySelector(element));
-                return collectionSet;
             }
 
             var d = new HashSet<TKey>(comparer);
@@ -112,11 +80,7 @@ namespace Tedd
         #region Array
         private static HashSet<TKey> ToHashSet<TSource, TKey>(TSource[] source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-            var d = new HashSet<TKey>(source.Length, comparer);
-#else
             var d = new HashSet<TKey>(comparer);
-#endif
             for (var i = 0; i < source.Length; i++)
                 d.Add(keySelector(source[i]));
 
@@ -127,14 +91,9 @@ namespace Tedd
         #region List
         private static HashSet<TKey> ToHashSet<TSource, TKey>(List<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-            var d = new HashSet<TKey>(source.Count, comparer);
-#else
             var d = new HashSet<TKey>(comparer);
-#endif
-            // Kept original loop but optimized to for-loop since List<T> supports O(1) indexer
-            for (var i = 0; i < source.Count; i++)
-                d.Add(keySelector(source[i]));
+            foreach (TSource element in source)
+                d.Add(keySelector(element));
 
             return d;
         }
