@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tedd
+namespace Tedd.Archive
 {
     public static class AddRemoveRangeExtensions
     {
@@ -18,10 +18,6 @@ namespace Tedd
             {
                 if (collection.Count == 0)
                     return 0;
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                hashSet.EnsureCapacity(hashSet.Count + collection.Count);
-#endif
 
                 if (collection is TKey[] array)
                 {
@@ -59,10 +55,6 @@ namespace Tedd
             {
                 if (collection.Count == 0)
                     return 0;
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER || NET5_0_OR_GREATER
-                hashSet.EnsureCapacity(hashSet.Count + collection.Count);
-#endif
 
                 if (collection is TSource[] array)
                 {
