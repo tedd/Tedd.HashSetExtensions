@@ -8,8 +8,8 @@ using Tedd.Archive;
 [MemoryDiagnoser]
 public class ToHashSetBenchmarks
 {
-    private List<int>? _list;
-    private int[]? _array;
+    private List<int> _list = null!;
+    private int[] _array = null!;
 
     [Params(100, 10000)]
     public int Size { get; set; }
