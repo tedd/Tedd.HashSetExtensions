@@ -7,8 +7,9 @@ All methods implemented with and without both selector and comparer. Special han
 The core epistemological mechanism behind these extensions is type-checking against `ICollection<T>` prior to enumeration. When invoked, the execution flow operates as follows:
 
 1. **Type Resolution:** The framework determines if the provided `IEnumerable<T>` implements `ICollection<T>`.
-2. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
-3. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
+2. **Memory Pre-allocation (Modern .NET):** If an `ICollection<T>` is identified on modern frameworks (.NET Standard 2.1+, .NET Core 3.0+, .NET 5.0+), the framework proactively invokes `EnsureCapacity()` prior to population, mitigating sequential memory reallocation overhead.
+3. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
+4. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
 
 *(Hypothetical enhancements regarding `ReadOnlySpan<T>` or vectorized SIMD execution are not currently implemented and remain under evaluation.)*
 

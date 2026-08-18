@@ -6,3 +6,6 @@
 1. Revise instructional examples within `README.md` to utilize the selector syntax (e.g., `.ToHashSet(s => s)`) or explicitly address the disambiguation protocol when no selector is utilized.
 2. Upgrade structural syntax across all documentation artifacts to utilize contemporary C# collection expressions (e.g., `[]`) and target-typed `new()`.
 3. Introduce an explicit "Architectural Execution Flow" section to delineate how the extension structurally prioritizes array/list capacity allocation via index-based iteration.
+## 2026-08-18 - Architectural Execution Flow Synchronization
+**Observation:** The README.md contained an epistemological deficit by failing to articulate the memory pre-allocation optimization (`EnsureCapacity`) for `ICollection<T>` inputs on modern .NET frameworks, which was recently introduced in Bolt optimization PRs.
+**Strategic Action:** Synchronized the "Architectural Execution Flow" section in README.md to accurately document the EnsureCapacity paradigm, mitigating documentation drift and aligning the epistemological interface with the operational reality of the codebase.
