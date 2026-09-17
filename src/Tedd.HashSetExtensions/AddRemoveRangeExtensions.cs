@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Tedd
 {
@@ -25,17 +26,33 @@ namespace Tedd
 
                 if (collection is TKey[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Add(item))
+                            count++;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Add(array[i]))
                             count++;
+#endif
                     return count;
                 }
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Add(item))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(list[i]))
                             count++;
+#endif
                     return count;
                 }
             }
@@ -66,17 +83,33 @@ namespace Tedd
 
                 if (collection is TSource[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Add(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Add(keySelector(array[i])))
                             count++;
+#endif
                     return count;
                 }
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Add(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(keySelector(list[i])))
                             count++;
+#endif
                     return count;
                 }
             }
@@ -105,17 +138,33 @@ namespace Tedd
 
                 if (collection is TKey[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Remove(item))
+                            count++;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Remove(array[i]))
                             count++;
+#endif
                     return count;
                 }
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Remove(item))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(list[i]))
                             count++;
+#endif
                     return count;
                 }
 
@@ -143,17 +192,33 @@ namespace Tedd
 
                 if (collection is TSource[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Remove(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Remove(keySelector(array[i])))
                             count++;
+#endif
                     return count;
                 }
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Remove(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(keySelector(list[i])))
                             count++;
+#endif
                     return count;
                 }
 
