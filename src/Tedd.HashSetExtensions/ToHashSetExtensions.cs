@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Tedd
 {
@@ -29,8 +30,15 @@ namespace Tedd
 #else
                     var d = new HashSet<TKey>(comparer);
 #endif
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        d.Add(item);
+#else
                     for (var i = 0; i < array.Length; i++)
                         d.Add(array[i]);
+#endif
                     return d;
                 }
 
@@ -41,8 +49,15 @@ namespace Tedd
 #else
                     var d = new HashSet<TKey>(comparer);
 #endif
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        d.Add(item);
+#else
                     for (var i = 0; i < list.Count; i++)
                         d.Add(list[i]);
+#endif
                     return d;
                 }
 
@@ -117,9 +132,15 @@ namespace Tedd
 #else
             var d = new HashSet<TKey>(comparer);
 #endif
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            // Time Complexity: O(n) where n is the length of the array
+            // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+            foreach (var item in source.AsSpan())
+                d.Add(keySelector(item));
+#else
             for (var i = 0; i < source.Length; i++)
                 d.Add(keySelector(source[i]));
-
+#endif
             return d;
         }
         #endregion
@@ -132,9 +153,15 @@ namespace Tedd
 #else
             var d = new HashSet<TKey>(comparer);
 #endif
-            // Kept original loop but optimized to for-loop since List<T> supports O(1) indexer
+#if NET5_0_OR_GREATER
+            // Time Complexity: O(n) where n is the count of the list
+            // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+            foreach (var item in CollectionsMarshal.AsSpan(source))
+                d.Add(keySelector(item));
+#else
             for (var i = 0; i < source.Count; i++)
                 d.Add(keySelector(source[i]));
+#endif
 
             return d;
         }

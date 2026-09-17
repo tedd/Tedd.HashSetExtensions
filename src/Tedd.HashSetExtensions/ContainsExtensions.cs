@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Tedd
 {
@@ -17,17 +18,33 @@ namespace Tedd
 
                 if (collection is TKey[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Contains(item))
+                            return true;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Contains(array[i]))
                             return true;
+#endif
                     return false;
                 }
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Contains(item))
+                            return true;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(list[i]))
                             return true;
+#endif
                     return false;
                 }
             }
@@ -51,17 +68,33 @@ namespace Tedd
 
                 if (collection is TSource[] array)
                 {
+#if NET5_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    // Time Complexity: O(n) where n is the length of the array
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging Span slice.
+                    foreach (var item in array.AsSpan())
+                        if (hashSet.Contains(keySelector(item)))
+                            return true;
+#else
                     for (var i = 0; i < array.Length; i++)
                         if (hashSet.Contains(keySelector(array[i])))
                             return true;
+#endif
                     return false;
                 }
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    // Time Complexity: O(n) where n is the count of the list
+                    // Space Complexity: O(1) supplementary memory allocations, leveraging CollectionsMarshal.AsSpan.
+                    foreach (var item in CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Contains(keySelector(item)))
+                            return true;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(keySelector(list[i])))
                             return true;
+#endif
                     return false;
                 }
             }
