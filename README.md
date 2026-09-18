@@ -7,10 +7,11 @@ All methods implemented with and without both selector and comparer. Special han
 The core epistemological mechanism behind these extensions is type-checking against `ICollection<T>` prior to enumeration. When invoked, the execution flow operates as follows:
 
 1. **Type Resolution:** The framework determines if the provided `IEnumerable<T>` implements `ICollection<T>`.
-2. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
-3. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
+2. **Capacity Pre-allocation:** For modern .NET targets (.NET Standard 2.1, .NET Core 3.0+), the structural capacity of the collection (accessible via `ICollection<T>.Count`) is utilized to pre-allocate internal hash set buffers via capacity constructors (e.g., `new HashSet<T>(capacity, comparer)`) or `EnsureCapacity()`. This guarantees O(1) allocation overhead per set creation or mutation, eliminating dynamic array resizing and GC pressure.
+3. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized iteration.
+4. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
 
-*(Hypothetical enhancements regarding `ReadOnlySpan<T>` or vectorized SIMD execution are not currently implemented and remain under evaluation.)*
+*(Hypothetical enhancements regarding `ReadOnlySpan<T>`, `CollectionsMarshal.AsSpan()`, or vectorized SIMD execution are not currently implemented and remain under evaluation.)*
 
 # Examples
 
