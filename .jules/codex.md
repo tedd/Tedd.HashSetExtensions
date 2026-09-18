@@ -6,3 +6,9 @@
 1. Revise instructional examples within `README.md` to utilize the selector syntax (e.g., `.ToHashSet(s => s)`) or explicitly address the disambiguation protocol when no selector is utilized.
 2. Upgrade structural syntax across all documentation artifacts to utilize contemporary C# collection expressions (e.g., `[]`) and target-typed `new()`.
 3. Introduce an explicit "Architectural Execution Flow" section to delineate how the extension structurally prioritizes array/list capacity allocation via index-based iteration.
+
+## 2024-09-18 - Documentation Drift: Architectural Execution Flow Articulation
+
+**Observation:** The README.md file exhibited epistemological deficits regarding the recent introduction of the `EnsureCapacity` and capacity constructor optimizations for `HashSet<T>` instances utilizing arrays and lists. This lack of architectural clarity required developers to independently deduce the O(1) allocation mechanism introduced for modern .NET targets.
+
+**Strategic Action:** Explicitly articulated the "Capacity Pre-allocation" paradigm within the "Architectural Execution Flow" section of the README.md. This strictly differentiates the established paradigms (like deterministic indexing) from the recently implemented performance optimizations, effectively reducing pedagogical friction for developers utilizing .NET Standard 2.1 and .NET Core 3.0+.
