@@ -36,28 +36,25 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
-      projects: '*.sln'
+      projects: 'src/*.sln'
       publishTestResults: true
       feedsToUse: 'select'
       includeNuGetOrg: true
-      workingDirectory: src
   
   # .NET Core
   # Build, test, package, or publish a dotnet application, or run a custom dotnet command
   - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
-      projects: '*.sln'
+      projects: 'src/*.sln'
       publishTestResults: true
       feedsToUse: 'select'
       includeNuGetOrg: true
-      workingDirectory: src
 
   - task: DotNetCoreCLI@2
     inputs:
       command: 'test'
-      projects: '**/*Tests.csproj'
+      projects: 'src/**/*Tests.csproj'
       publishTestResults: true
       feedsToUse: 'select'
       includeNuGetOrg: true
-      workingDirectory: src
