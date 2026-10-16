@@ -77,6 +77,53 @@ namespace Tedd.HashSetExtensions.Tests
             }
         }
 
+        [Fact]
+        public void SanityTests()
+        {
+            List<string> list = null;
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet(); });
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet(StringComparer.OrdinalIgnoreCase); });
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet(s => s); });
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet(s => s, StringComparer.OrdinalIgnoreCase); });
+
+            list = new List<string>();
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet((Func<string, string>)null!); });
+            Assert.Throws<ArgumentException>(() => { list.ToHashSet((Func<string, string>)null!, StringComparer.OrdinalIgnoreCase); });
+
+            // Empty collections
+            var hashSet1 = list.ToHashSet();
+            Assert.Empty(hashSet1);
+            var hashSet2 = list.ToHashSet(s => s);
+            Assert.Empty(hashSet2);
+            var hashSet3 = Array.Empty<string>().ToHashSet();
+            Assert.Empty(hashSet3);
+            var hashSet4 = Array.Empty<string>().ToHashSet(s => s);
+            Assert.Empty(hashSet4);
+
+            var emptyHashSet = new HashSet<string>();
+            var hashSet5 = emptyHashSet.ToHashSet();
+            Assert.Empty(hashSet5);
+            var hashSet6 = emptyHashSet.ToHashSet(s => s);
+            Assert.Empty(hashSet6);
+
+            // ICollection fallback (HashSet)
+            var hashSetSource = new HashSet<string> { "test" };
+            var h7 = hashSetSource.ToHashSet();
+            Assert.Single(h7);
+            Assert.Contains("test", h7);
+
+            var h8 = hashSetSource.ToHashSet(s => s);
+            Assert.Single(h8);
+            Assert.Contains("test", h8);
+
+            // IEnumerable fallback with keySelector
+            var nonICollection = hashSetSource.Select(s => s);
+            var h9 = nonICollection.ToHashSet(s => s);
+            Assert.Single(h9);
+            Assert.Contains("test", h9);
+
+        }
+
         #region Selector
         #region List
         [Fact]

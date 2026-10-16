@@ -21,8 +21,18 @@ namespace Tedd.HashSetExtensions.Tests
             var h = list.ToHashSet();
             h.AddRange(list);
             h.RemoveRange(list);
-            Assert.Throws<ArgumentException>(() => { h.ContainsRange((IList<string>)null); });
+            Assert.Throws<ArgumentException>(() => { h.ContainsRange((IEnumerable<string>)null!); });
+            Assert.Throws<ArgumentException>(() => { h.ContainsRange((IEnumerable<string>)null!, s => s); });
+
+            // Empty checks
             Assert.False(h.ContainsRange(list));
+            Assert.False(h.ContainsRange(list, s => s));
+            Assert.False(h.ContainsRange(Array.Empty<string>()));
+            Assert.False(h.ContainsRange(Array.Empty<string>(), s => s));
+
+            var emptyHashSet = new HashSet<string>();
+            Assert.False(h.ContainsRange(emptyHashSet));
+            Assert.False(h.ContainsRange(emptyHashSet, s => s));
 
             list.Add("nope");
             list.Add("nope");
@@ -30,6 +40,45 @@ namespace Tedd.HashSetExtensions.Tests
             Assert.False(h.ContainsRange(list.ToList()));
             Assert.False(h.ContainsRange(list.ToArray()));
             Assert.False(h.ContainsRange(list.Select(s => s)));
+
+            Assert.False(h.ContainsRange(list.ToList(), s => s));
+            Assert.False(h.ContainsRange(list.ToArray(), s => s));
+
+            // ICollection fallback (HashSet)
+            var nopeHashSet = new HashSet<string> { "nope" };
+            Assert.False(h.ContainsRange(nopeHashSet));
+            Assert.False(h.ContainsRange(nopeHashSet, s => s));
+
+            // ICollection matching fallback
+            var yepHashSet = new HashSet<string> { "a" };
+            h.AddRange(yepHashSet);
+            Assert.True(h.ContainsRange(yepHashSet));
+            Assert.True(h.ContainsRange(yepHashSet, s => s));
+
+            // For Array matching/non-matching branch
+            var nopeArray = new string[] { "nope", "nope2" };
+            Assert.False(h.ContainsRange(nopeArray));
+            Assert.False(h.ContainsRange(nopeArray, s => s));
+            var yepArray = new string[] { "nope", "a" };
+            Assert.True(h.ContainsRange(yepArray));
+            Assert.True(h.ContainsRange(yepArray, s => s));
+
+            // For List matching/non-matching branch
+            var nopeList = new List<string> { "nope", "nope2" };
+            Assert.False(h.ContainsRange(nopeList));
+            Assert.False(h.ContainsRange(nopeList, s => s));
+            var yepList = new List<string> { "nope", "a" };
+            Assert.True(h.ContainsRange(yepList));
+            Assert.True(h.ContainsRange(yepList, s => s));
+
+            // Test case with empty hash set but non-empty collection
+            var emptyH = new HashSet<string>();
+            Assert.False(emptyH.ContainsRange(yepArray));
+            Assert.False(emptyH.ContainsRange(yepArray, s => s));
+
+            // To hit line 73: a non-ICollection enumerable that doesn't match
+            var nopeEnumerable = nopeArray.Select(x => x);
+            Assert.False(h.ContainsRange(nopeEnumerable, s => s));
 
         }
 
