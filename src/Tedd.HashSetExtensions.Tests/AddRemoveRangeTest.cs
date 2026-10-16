@@ -83,9 +83,38 @@ namespace Tedd.HashSetExtensions.Tests
             var h = list.ToHashSet();
             h.AddRange(list);
             h.RemoveRange(list);
-            Assert.Throws<ArgumentException>(() => { h.AddRange(null); });
-            Assert.Throws<ArgumentException>(() => { h.RemoveRange(null); });
+            Assert.Throws<ArgumentException>(() => { h.AddRange((IEnumerable<string>)null!); });
+            Assert.Throws<ArgumentException>(() => { h.RemoveRange((IEnumerable<string>)null!); });
 
+            // Null tests with selector
+            Assert.Throws<ArgumentException>(() => { h.AddRange((IEnumerable<string>)null!, s => s); });
+            Assert.Throws<ArgumentException>(() => { h.RemoveRange((IEnumerable<string>)null!, s => s); });
+
+            // Empty collections with selector
+            Assert.Equal(0, h.AddRange(list, s => s));
+            Assert.Equal(0, h.RemoveRange(list, s => s));
+
+            var emptyArray = Array.Empty<string>();
+            Assert.Equal(0, h.AddRange(emptyArray));
+            Assert.Equal(0, h.RemoveRange(emptyArray));
+            Assert.Equal(0, h.AddRange(emptyArray, s => s));
+            Assert.Equal(0, h.RemoveRange(emptyArray, s => s));
+
+            // Empty ICollection fallback
+            var emptyHashSet = new HashSet<string>();
+            Assert.Equal(0, h.AddRange(emptyHashSet));
+            Assert.Equal(0, h.RemoveRange(emptyHashSet));
+            Assert.Equal(0, h.AddRange(emptyHashSet, s => s));
+            Assert.Equal(0, h.RemoveRange(emptyHashSet, s => s));
+
+            // ICollection fallback (not Array, not List)
+            var hashSetSource = new HashSet<string> { "test" };
+            Assert.Equal(1, h.AddRange(hashSetSource)); // No selector
+            Assert.Equal(1, h.RemoveRange(hashSetSource)); // No selector
+
+            var hashSetSource2 = new HashSet<string> { "test2" };
+            Assert.Equal(1, h.AddRange(hashSetSource2, s => s)); // Selector
+            Assert.Equal(1, h.RemoveRange(hashSetSource2, s => s)); // Selector
         }
 
         #region No selector
