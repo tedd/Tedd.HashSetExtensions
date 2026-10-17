@@ -33,9 +33,15 @@ namespace Tedd
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Add(item))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(list[i]))
                             count++;
+#endif
                     return count;
                 }
             }
@@ -74,9 +80,15 @@ namespace Tedd
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Add(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Add(keySelector(list[i])))
                             count++;
+#endif
                     return count;
                 }
             }
@@ -113,9 +125,15 @@ namespace Tedd
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Remove(item))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(list[i]))
                             count++;
+#endif
                     return count;
                 }
 
@@ -151,9 +169,15 @@ namespace Tedd
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Remove(keySelector(item)))
+                            count++;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Remove(keySelector(list[i])))
                             count++;
+#endif
                     return count;
                 }
 

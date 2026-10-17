@@ -25,9 +25,15 @@ namespace Tedd
 
                 if (collection is List<TKey> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Contains(item))
+                            return true;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(list[i]))
                             return true;
+#endif
                     return false;
                 }
             }
@@ -59,9 +65,15 @@ namespace Tedd
 
                 if (collection is List<TSource> list)
                 {
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        if (hashSet.Contains(keySelector(item)))
+                            return true;
+#else
                     for (var i = 0; i < list.Count; i++)
                         if (hashSet.Contains(keySelector(list[i])))
                             return true;
+#endif
                     return false;
                 }
             }
