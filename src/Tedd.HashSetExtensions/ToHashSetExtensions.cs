@@ -41,8 +41,13 @@ namespace Tedd
 #else
                     var d = new HashSet<TKey>(comparer);
 #endif
+#if NET5_0_OR_GREATER
+                    foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list))
+                        d.Add(item);
+#else
                     for (var i = 0; i < list.Count; i++)
                         d.Add(list[i]);
+#endif
                     return d;
                 }
 
@@ -132,9 +137,14 @@ namespace Tedd
 #else
             var d = new HashSet<TKey>(comparer);
 #endif
+#if NET5_0_OR_GREATER
+            foreach (var item in System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source))
+                d.Add(keySelector(item));
+#else
             // Kept original loop but optimized to for-loop since List<T> supports O(1) indexer
             for (var i = 0; i < source.Count; i++)
                 d.Add(keySelector(source[i]));
+#endif
 
             return d;
         }
