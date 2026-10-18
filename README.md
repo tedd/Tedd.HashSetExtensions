@@ -7,8 +7,9 @@ All methods implemented with and without both selector and comparer. Special han
 The core epistemological mechanism behind these extensions is type-checking against `ICollection<T>` prior to enumeration. When invoked, the execution flow operates as follows:
 
 1. **Type Resolution:** The framework determines if the provided `IEnumerable<T>` implements `ICollection<T>`.
-2. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
-3. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
+2. **Pre-Allocation Optimization:** By evaluating `ICollection<T>.Count`, the framework leverages HashSet capacity constructors or `EnsureCapacity()` on modern .NET targets to optimally pre-allocate memory, preventing dynamic resizing overhead during population.
+3. **Deterministic Indexing (Established Paradigm):** If the structure resolves as a `T[]` (array) or `List<T>`, the framework bypasses standard `foreach` allocation overhead and utilizes a `for` loop. This leverages deterministic indexers (`array[i]` or `list[i]`), ensuring highly optimized, allocation-free iteration.
+4. **Fallback Enumeration:** If the collection is a generic `IEnumerable<T>`, it gracefully defaults to standard enumeration.
 
 *(Hypothetical enhancements regarding `ReadOnlySpan<T>` or vectorized SIMD execution are not currently implemented and remain under evaluation.)*
 
@@ -74,8 +75,11 @@ HashSet<string> hashSet = list.ToHashSet(s => s);
 // HashSet structure: A, B, C
 
 List<string> otherList = ["A", "B"];
-
 bool thisIsTrue = hashSet.ContainsRange(otherList);
+
+// Functional selector allows complex types to be evaluated against the hash set
+List<int> complexList = [1, 2]; // Assuming a string representation resolves the entity
+bool thisIsAlsoTrue = hashSet.ContainsRange(complexList, i => i.ToString()); // Evaluates "1", "2"
 ```
 
 ### hashset.AddRange(ienumerable)
@@ -84,11 +88,17 @@ List<string> list1 = ["A", "B"];
 HashSet<string> hashSet = list1.ToHashSet(s => s);
 // HashSet structure: A, B
 
-List<string> list2 = ["C", "D"];
-hashSet.AddRange(list2);
-// HashSet structure: A, B, C, D
+List<string> list2 = ["C", "D", "A"]; // "A" is a duplicate
+// AddRange returns the discrete count of successfully added entities
+int entitiesAdded = hashSet.AddRange(list2);
+// entitiesAdded = 2 ("C", "D"). HashSet structure: A, B, C, D
 
 bool thisIsTrue = hashSet.Contains("D");
+
+// Functional selector paradigm
+List<int> intList = [5, 6];
+int moreAdded = hashSet.AddRange(intList, i => i.ToString());
+// HashSet structure: A, B, C, D, 5, 6
 ```
 
 ### hashset.RemoveRange(ienumerable)
@@ -97,10 +107,14 @@ List<string> list1 = ["A", "B", "C", "D"];
 HashSet<string> hashSet = list1.ToHashSet(s => s);
 // HashSet structure: A, B, C, D
 
-List<string> list2 = ["A", "B"];
-hashSet.RemoveRange(list2);
-// HashSet structure: C, D
+List<string> list2 = ["A", "B", "E"]; // "E" does not exist in the hash set
+// RemoveRange returns the discrete count of successfully removed entities
+int entitiesRemoved = hashSet.RemoveRange(list2);
+// entitiesRemoved = 2 ("A", "B"). HashSet structure: C, D
 
 bool thisIsFalse = hashSet.Contains("A");
-bool thisIsAlsoFalse = hashSet.Contains("B");
+
+// Functional selector paradigm
+List<int> intList = [1, 2]; // Will project to "1", "2" (which are absent)
+int noneRemoved = hashSet.RemoveRange(intList, i => i.ToString());
 ```
